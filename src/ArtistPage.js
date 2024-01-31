@@ -3,26 +3,29 @@ import verified from './Assets/verify.png'
 import Table from 'react-bootstrap/Table'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import samp from './Album Cover/Yuvan5.jpeg'
 import { useSelector } from 'react-redux';
 
 
 const ArtistPage = () => {
     const USER_TOKEN = localStorage.getItem('user_token');
-    var songData = useSelector((state) => state.songInfo.songInformation)
+    // var songData = useSelector((state) => state.songInfo.songInformation)
     var deviceData = useSelector((state) => state.deviceInfo.deviceInformation)
 
 
     const Artist_Id = useParams()
-    const [artist, setArtist] = useState({
-        name: '', image: '', followers: '', context_uri: ''
-    })
+    const [artist, setArtist] = useState(
+        {
+            name: '',
+            image: '',
+            followers: '',
+            context_uri: ''
+        }
+    )
     const [artistSongs, setArtistSongs] = useState()
 
 
 
     useEffect(() => {
-        const searchHeader = document.getElementsByClassName('SearchMain')
 
         if (USER_TOKEN) {
             getArtistById(USER_TOKEN, Artist_Id)
@@ -48,11 +51,11 @@ const ArtistPage = () => {
 
     }
     const playSongOnClick = async (TOKEN, CONTEXT_URI) => {
-        console.log('hello');
+        // console.log('hello');
         console.log(CONTEXT_URI);
         const DEVICE_ID = deviceData.device_id
-        console.log('from play song on click', DEVICE_ID);
-        console.log('from play song on click token', TOKEN);
+        // console.log('from play song on click', DEVICE_ID);
+        // console.log('from play song on click token', TOKEN);
 
 
         const data = {

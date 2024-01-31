@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-// import sleepImage from './images/sleep.jpeg';
-// import Button from './Button';
+
 import axios from 'axios';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import './App.css';
@@ -110,7 +109,7 @@ const Home = () => {
                 },
             }).then((res) => {
                 setRecentlyPlayedTrack(res.data.items)
-                console.log('recent', res.data);
+                // console.log('recent', res.data);
             }).catch(err => console.log('err getRecentlyPlayedTrack', err))
     }
 
@@ -308,7 +307,7 @@ const Home = () => {
     }
 
     const playSongOnClick = async (TOKEN, CONTEXT_URI) => {
-        console.log(CONTEXT_URI);
+        // console.log(CONTEXT_URI);
 
         const data = {
             "context_uri": CONTEXT_URI,
@@ -319,7 +318,7 @@ const Home = () => {
         };
 
         const DEVICE_ID = deviceData.device_id
-        console.log(DEVICE_ID, 'from play song on click');
+        // console.log(DEVICE_ID, 'from play song on click');
 
         await axios.put(
             `https://api.spotify.com/v1/me/player/play?device_id=${DEVICE_ID}`,
@@ -345,8 +344,8 @@ const Home = () => {
         <div className='MainHome' onScroll={handleScroll}   >
             <section className='artist_section_outer scrollable-content'  >
                 <h3>Greeting</h3>
-                <div className='' style={{ gap: '10px', width: '100%', display: 'flex', flexWrap: 'wrap' }} >
-                    <Link key={1} style={{ textDecoration: 'none' }} to={`/home/likedSongs`} >
+                <div key={500} className='' style={{ gap: '10px', width: '100%', display: 'flex', flexWrap: 'wrap' }} >
+                    <Link style={{ textDecoration: 'none' }} to={`/home/likedSongs`} >
                         <div className='likedSongsBG' style={{
                             width: '363px', height: '50px', borderRadius: '6px', display: 'flex',
                             backgroundColor: '#29214a',
@@ -369,12 +368,12 @@ const Home = () => {
                     {recentlyPlayedTrack.map((song, index) => {
                         return (
 
-                            <div className='likedSongsBG' style={{
+                            <div key={index} className='likedSongsBG' style={{
                                 width: '363px', height: '50px', borderRadius: '6px', display: 'flex',
                                 backgroundColor: '#29214a',
                                 overflow: 'hidden'
                             }} >
-                                <Link key={index} style={{ textDecoration: 'none' }} to={`/home/album/${song.track.album.id}`} >
+                                <Link style={{ textDecoration: 'none' }} to={`/home/album/${song.track.album.id}`} >
 
                                     <div className='likedSongImageBox' style={{ height: '100%', width: '14%' }} >
                                         <img src={song.track.album.images[1].url} height={'100%'} alt="noimg" />

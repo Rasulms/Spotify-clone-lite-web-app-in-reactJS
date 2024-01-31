@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import Table from 'react-bootstrap/esm/Table';
 import { useNavigate } from 'react-router-dom';
@@ -80,7 +80,7 @@ const Search = () => {
                 }
             ).then(async (response) => {
                 // console.log('SUCCESS_ON_LOAD', SUCCESS_ON_LOAD);
-                console.log('response data : ', response.data);
+                // console.log('response data : ', response.data);
                 await setSearchResults(response.data.tracks.items)
                 setIsLoading(false)
 

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { updateDeviceInfo, updatesongInformation } from './Redux/SongInfo';
+import { updatesongInformation } from './Redux/SongInfo';
 import axios from 'axios';
 import { updatedeviceInfo } from './Redux/device';
 
 
 const WebPlayback = (props) => {
   const dispatch = useDispatch()
-  var songData = useSelector((state) => state.songInfo.songInformation)
+  // var songData = useSelector((state) => state.songInfo.songInformation)
   var deviceData = useSelector((state) => state.deviceInfo.deviceInformation)
   const [repeat, setRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
@@ -21,10 +21,10 @@ const WebPlayback = (props) => {
 
   // console.log(displayData);
 
-  const [player, setPlayer] = useState(undefined);
+  const [players, setPlayer] = useState();
   const [is_paused, setPaused] = useState(true);
   const [is_active, setActive] = useState(false);
-  const [current_track, setTrack] = useState();
+  // const [current_track, setTrack] = useState();
 
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const WebPlayback = (props) => {
         const currentInfo = {
           device_id: device_id,
         }
-        console.log('Device ID is Online & device id stored in reduxxx', device_id);
+        // console.log('Device ID is Online & device id stored in reduxxx', device_id);
         setActive(true)
 
         await dispatch(updatedeviceInfo(currentInfo))
@@ -66,7 +66,7 @@ const WebPlayback = (props) => {
       });
 
       player.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id);
+        console.log('Device ID has gone offline');
       });
 
 
@@ -75,20 +75,19 @@ const WebPlayback = (props) => {
 
       player.addListener('player_state_changed', state => {
 
-        if (props.disconnectPlayer) {
-          player.disconnect()
-        }
+
 
         if (!state) {
           return
         }
-        console.log('state is changed ', state);
 
-        setTrack(state.track_window.current_track);
+        // setTrack(state.track_window.current_track);
         setPaused(state.paused);
         // var current_track = playerState.track_window.current_track;
         // var next_track = playerState.track_window.next_tracks[0];
         const playerState = state
+        console.log('state is changed ', playerState);
+
         if (playerState && playerState.track_window.current_track !== null) {
           var artists = '';
 
@@ -114,14 +113,20 @@ const WebPlayback = (props) => {
             song_duration: playerState.track_window.current_track.duration_ms,
 
           }
-          console.log('deviceid from redux ', songData);
-          console.log('currentinfo', currentInfo);
+          // console.log('deviceid from redux ', songData);
+          // console.log('currentinfo', currentInfo);
           return dispatch(updatesongInformation(currentInfo))
         }
         else {
           getPlayerInfo(USERTOKEN)
         }
-      });
+      }
+
+      );
+      if (props.disconnectPlayer === true) {
+        console.log('disconnected');
+        players.disconnect()
+      }
 
     }
   }, [props.disconnectPlayer]
@@ -143,10 +148,10 @@ const WebPlayback = (props) => {
           // const artists_Join = artists.map((item)=>item.name.join(', '))
 
 
-          if (playingSongs.artists.length == 1) {
+          if (playingSongs.artists.length === 1) {
             artists = playingSongs.artists[0].name
           }
-          else if (playingSongs.artists.length == 2) {
+          else if (playingSongs.artists.length === 2) {
             artists = `${playingSongs.artists[0].name}, ${playingSongs.artists[1].name}`
 
           }
@@ -202,13 +207,13 @@ const WebPlayback = (props) => {
   //     console.log('resumed!');
   //   });
   // }
-  const handleDisconnectPlayer = () => {
-    setPaused(true)
-    setActive(false)
-    player.disconnect().then(() => console.log('player disconnected'))
+  // const handleDisconnectPlayer = () => {
+  //   setPaused(true)
+  //   setActive(false)
+  //   player.disconnect().then(() => console.log('player disconnected'))
 
 
-  }
+  // }
 
   const handleNext = async (USER_TOKEN, device_id) => {
     await fetch(`https://api.spotify.com/v1/me/player/next?device_id=${device_id}`, {
@@ -231,7 +236,7 @@ const WebPlayback = (props) => {
     // getPlayerInfo(USER_TOKEN)
   }
   const handleShuffle = async (e, USER_TOKEN, btn_type) => {
-    console.log(btn_type);
+    // console.log(btn_type);
 
     if (btn_type === 'Shuffle') {
       await fetch(`https://api.spotify.com/v1/me/player/shuffle?state=false&device_id=${deviceData.device_id}`, {
@@ -277,7 +282,7 @@ const WebPlayback = (props) => {
   // console.log(props.token);
   return (
     <>
-      {is_active && displayData.product == 'premium' ? <div id='webPlayer' style={{ width: '32%', height: '9vh', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+      {is_active && displayData.product === 'premium' ? <div id='webPlayer' style={{ width: '32%', height: '9vh', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '1%', width: '100%', height: '5vh' }} >
 
           <div style={{ width: '7%', display: 'flex', alignItems: 'center' }} >

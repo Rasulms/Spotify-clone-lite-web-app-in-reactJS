@@ -3,14 +3,13 @@ import { useParams } from 'react-router-dom'
 import Table from 'react-bootstrap/Table'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
-import { updatedisplayInfo } from './Redux/profile'
+// import { updatedisplayInfo } from './Redux/profile'
 // import sampleImage from './images/sleep.jpeg'
 
 
 const PlayList = () => {
     const Album_Id = useParams()
-    const dispatch = useDispatch()
-    var songData = useSelector((state) => state.songInfo.deviceInfo)
+
     var deviceData = useSelector((state) => state.deviceInfo.deviceInformation)
 
 
@@ -61,7 +60,7 @@ const PlayList = () => {
     }
 
     const playSongOnClick = async (TOKEN, CONTEXT_URI) => {
-        console.log(CONTEXT_URI);
+        // console.log(CONTEXT_URI);
 
         const data = {
             "context_uri": CONTEXT_URI,
@@ -72,7 +71,7 @@ const PlayList = () => {
         };
 
         const DEVICE_ID = deviceData.device_id
-        console.log(DEVICE_ID, 'from play song on click');
+        // console.log(DEVICE_ID, 'from play song on click');
 
         await axios.put(
             `https://api.spotify.com/v1/me/player/play?device_id=${DEVICE_ID}`,
@@ -85,7 +84,7 @@ const PlayList = () => {
             }
         )
             .then(response => {
-                console.log('Success:', response.data);
+                // console.log('Success:', response.data);
             })
             .catch(error => {
                 console.error('Error:', error.response ? error.response.data : error.message);

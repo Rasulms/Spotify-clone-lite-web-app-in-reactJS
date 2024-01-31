@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 // import { useParams } from 'react-router-dom'
 import Table from 'react-bootstrap/Table'
 import axios from 'axios'
-import { updatesongInformation } from './Redux/SongInfo.js'
-import { useDispatch, useSelector } from 'react-redux';
+// import { updatesongInformation } from './Redux/SongInfo.js'
+import { useSelector } from 'react-redux';
 
 
 // import sampleImage from './images/sleep.jpeg'
 
 
 const LikedSongs = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     // const Album_Id = useParams()
     const [likedSongs, setLikedSongs] = useState({})
@@ -21,11 +21,6 @@ const LikedSongs = () => {
     const TOKEN_FROM_LOCALSTORAGE = localStorage.getItem('user_token')
 
     // console.log(displayData);
-
-
-
-
-
     useEffect(() => {
 
         // console.log(TOKEN_FROM_LOCALSTORAGE);
@@ -44,7 +39,7 @@ const LikedSongs = () => {
             }
         )
             .then(async (response) => {
-                console.log('liked songs ', response.data);
+                // console.log('liked songs ', response.data);
                 await setLikedSongs({
                     TotalSong: response.data.total,
                     Name: 'Liked Songs',
@@ -58,60 +53,20 @@ const LikedSongs = () => {
             .catch(err => console.log('err is ', err))
 
     }
-    // const handleSong = async (e, songId, access_token) => {
-    //     e.preventDefault()
-    //     console.log('api started');
-    //     await axios.get(`https://api.spotify.com/v1/tracks/${songId}?market=IN`,
-    //         {
-    //             headers: {
-    //                 Authorization: `Bearer ${access_token}`,
-    //             },
-    //         }).then(async (res) => {
-    //             var artists = '';
-    //             var songName = '';
-    //             if (res.data.artists.length == 1) {
-    //                 artists = res.data.artists[0].name
-    //             }
-    //             else if (res.data.artists.length == 2) {
-    //                 artists = `${res.data.artists[0].name}, ${res.data.artists[1].name}`
 
-    //             }
-    //             else {
-    //                 artists = `${res.data.artists[0].name}, ${res.data.artists[1].name}, ${res.data.artists[2].name}`
+    // const checkLikedorNot = async (USER_TOKEN, SONG_ID) => {
 
-    //             }
-    //             const songInfo = {
 
-    //                 name: res.data.name,
-    //                 artist: artists,
-    //                 thumbImage: res.data.album.images[0].url,
-    //                 type: res.data.type,
-    //                 song_id: res.data.id,
-    //                 album_id: res.data.album.id
-
-    //             }
-    //             console.log('single track data ', res.data)
-
-    //             // return await dispatch(updatesongInformation(songInfo))
-
+    //     await axios.get(`https://api.spotify.com/v1/me/tracks/contains?ids=${SONG_ID}`, {
+    //         headers: {
+    //             Authorization: `Bearer ${USER_TOKEN}`,
     //         }
-    //         ).catch(err => console.log('err in track api ', err))
-
+    //     }).then(res => setLikedSongs(res.data[0]))
 
     // }
-    const checkLikedorNot = async (USER_TOKEN, SONG_ID) => {
-
-
-        await axios.get(`https://api.spotify.com/v1/me/tracks/contains?ids=${SONG_ID}`, {
-            headers: {
-                Authorization: `Bearer ${USER_TOKEN}`,
-            }
-        }).then(res => setLikedSongs(res.data[0]))
-
-    }
 
     const playSongOnClick = async (TOKEN, CONTEXT_URI) => {
-        console.log(CONTEXT_URI);
+        // console.log(CONTEXT_URI);
 
         const data = {
             "context_uri": CONTEXT_URI,
@@ -122,7 +77,7 @@ const LikedSongs = () => {
         };
 
         const DEVICE_ID = songData.device_id
-        console.log(DEVICE_ID, 'from play song on click');
+        // console.log(DEVICE_ID, 'from play song on click');
 
         await axios.put(
             `https://api.spotify.com/v1/me/player/play?device_id=${DEVICE_ID}`,
@@ -135,7 +90,7 @@ const LikedSongs = () => {
             }
         )
             .then(response => {
-                console.log('Success:', response.data);
+                // console.log('Success:', response.data);
             })
             .catch(error => {
                 console.error('Error:', error.response ? error.response.data : error.message);
@@ -206,7 +161,7 @@ const LikedSongs = () => {
                                             </div>
                                             <div>
                                                 <span className='fontStyle' style={{ display: 'block', color: 'white', fontSize: '16px', cursor: 'pointer' }} >{item.track.name.length > 39 ? item.track.name.slice(0, 38) + '...' : item.track.name} </span>
-                                                <span className='fontStyle' style={{ color: '#a7a7a7', fontSize: '14px' }}> {item.track.artists.length == 3 ? item.track.artists[0].name + ', ' + item.track.artists[1].name : item.track.artists.length == 2 ? item.track.artists[0].name : item.track.artists.length == 4 ? item.track.artists[0].name + ', ' + item.track.artists[1].name : item.track.artists[0].name}
+                                                <span className='fontStyle' style={{ color: '#a7a7a7', fontSize: '14px' }}> {item.track.artists.length === 3 ? item.track.artists[0].name + ', ' + item.track.artists[1].name : item.track.artists.length === 2 ? item.track.artists[0].name : item.track.artists.length === 4 ? item.track.artists[0].name + ', ' + item.track.artists[1].name : item.track.artists[0].name}
                                                 </span>
                                             </div>
                                         </td>

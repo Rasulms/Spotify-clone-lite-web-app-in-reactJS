@@ -18,6 +18,7 @@ import { updatedisplayInfo } from './Redux/profile';
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import Modals from 'react-modal';
+import { updatedeviceInfo } from './Redux/device';
 
 
 
@@ -62,14 +63,15 @@ const LandingPage = () => {
         const searchHeader = document.getElementsByClassName('searchHeader')
 
         if (tokenCheck) {
-            currentUser(tokenCheck)
+            // currentUser(tokenCheck)
+            // if (displayData.profilepic != '') {
+            //     driverObj.drive();
+            // }
             // console.log(displayData.SpotifyUserID);
             getCurrentUserPlaylist(tokenCheck, UserID)
 
             // getPlayerInfo(tokenCheck)
         }
-
-
     }, [])
 
 
@@ -104,14 +106,11 @@ const LandingPage = () => {
                     type: res.data.type
 
                 }
-                console.log('DisplayInfo', DisplayInfo);
+                // console.log('DisplayInfo', DisplayInfo);
                 await dispatch(updatedisplayInfo(DisplayInfo))
 
             }).catch(err => console.log('err in get current user in album page', err))
-        if (displayData.profilepic != '') {
-            driverObj.drive();
 
-        }
     }
     const placeOrderStyle = {
         content: {
@@ -145,7 +144,7 @@ const LandingPage = () => {
                     var artists = '';
                     var playingSongs = res.data.item;
                     var deviceInfo = res.data.device;
-                    console.log(res.data);
+                    // console.log(res.data);
                     // var artists = res.data.artists;
                     // const artists_Join = artists.map((item)=>item.name.join(', '))
 
@@ -174,7 +173,7 @@ const LandingPage = () => {
                         progress_ms: playingSongs.progress_ms
 
                     }
-                    console.log('isplay', res.data);
+                    // console.log('display', res.data);
                     setIsPlaying(res.data.is_playing)
                     setShuffle(res.data.shuffle_state)
                     setRepeat(res.data.repeat_state === 'off' ? false : true)
@@ -194,7 +193,7 @@ const LandingPage = () => {
                     Authorization: `Bearer ${USER_TOKEN}`,
                 },
             }).then((res) => {
-                console.log('liked playlist', res.data.items);
+                // console.log('liked playlist', res.data.items);
                 SetCurrentUserPlaylist(res.data.items)
             }).catch(err => console.log('err in get current user playlist', err))
         // return GetUser
@@ -203,8 +202,21 @@ const LandingPage = () => {
 
 
     const handlelogout = async (USER_TOKEN) => {
-        localStorage.clear();
-        setDisconnectPlayer(true)
+        await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${deviceData.device_id}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${USER_TOKEN}`,
+            }
+        })
+        await setDisconnectPlayer(true)
+        await dispatch(updatedisplayInfo({}))
+        await dispatch(updatesongInformation({}))
+        await dispatch(updatedeviceInfo({}))
+
+
+
+
+        await localStorage.clear();
 
         setlogOutModal(false)
         navigate('/')
@@ -260,7 +272,7 @@ const LandingPage = () => {
         }
     };
     const handleShuffle = async (e, USER_TOKEN, btn_type) => {
-        console.log(btn_type);
+        // console.log(btn_type);
 
         if (btn_type === 'Shuffle') {
             await fetch(`https://api.spotify.com/v1/me/player/shuffle?state=false&device_id=${songData.device_id}`, {
@@ -317,7 +329,7 @@ const LandingPage = () => {
 
     const handleLikedSong = async (btn_type, USER_TOKEN) => {
         if (btn_type == 'notLiked') {
-            console.log(songData.song_id);
+            // console.log(songData.song_id);
             await fetch(`https://api.spotify.com/v1/me/tracks?ids=${songData.song_id}`, {
                 method: 'PUT',
                 headers: {
@@ -359,7 +371,7 @@ const LandingPage = () => {
             }
         }).then(res => {
             setDeviceList(res.data['devices'])
-            console.log(res.data['devices']);
+            // console.log(res.data['devices']);
         }).catch(err => console.log('get available device ', err))
         currentUser(USER_TOKEN)
 
@@ -372,7 +384,10 @@ const LandingPage = () => {
     }
 
     const handleTransferPlayback = async (deviceId, TOKEN) => {
-
+        const currentInfo = {
+            device_id: deviceId,
+        }
+        await dispatch(updatedeviceInfo(currentInfo))
         setAvaiableDeviceModal(false)
 
         const data = {
@@ -399,7 +414,7 @@ const LandingPage = () => {
                 console.log('FETCH Success:', responseData);
             }
         } catch (error) {
-            console.error('Error in transfer playback:', error.message);
+            console.error('Error in transfer playback:', error);
         }
 
     }
@@ -490,8 +505,8 @@ const LandingPage = () => {
                         <CModal
                             visible={logOutModal}
                             aria-labelledby="Logout"
-                            backdropTransition={{ timeout: 10 }}
-                            modalTransition={{ timeout: 20 }}
+                        // backdroptransition={{ timeout: 10 }}
+                        // modaltransition={{ timeout: 20 }}
                         >
                             <CModalHeader style={{ backgroundColor: '#121212' }}  >
                                 <CModalTitle style={{ color: 'white', fontSize: '20px' }} className='fontStyle'>Log Out Spotify ?</CModalTitle>
@@ -551,7 +566,7 @@ const LandingPage = () => {
 
 
                     <div style={{ display: 'flex', justifyContent: "center", outline: 'none', border: 'none' }} >
-                        <button onClick={() => { getAvailableDevices(u_token) }} className='btn'><i class="fa-solid fa-desktop" style={{ color: '#ffffff' }}></i></button>
+                        <button onClick={() => { getAvailableDevices(u_token) }} className='btn'><i className="fa-solid fa-desktop" style={{ color: '#ffffff' }}></i></button>
                     </div>
                     <Modals ariaHideApp={false} isOpen={avaiableDeviceModal}
                         style={placeOrderStyle} shouldCloseOnOverlayClick={true}

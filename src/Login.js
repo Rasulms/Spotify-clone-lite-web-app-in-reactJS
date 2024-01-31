@@ -20,33 +20,29 @@ import ReturnParams from './api/ReturnParams.js';
 
 const Login = () => {
     const dispatch = useDispatch();
-    const API_URL = `http://localhost:5000`
     const navigate = useNavigate()
     const CLIENT_ID = '108736de212a46b481ebb34a1dad6c5f'
-    const CLIENT_SECRET_ID = 'f1bc62c3a67d436abddf208aba722135'
     const SPOTIFY_ENDPOINT = 'https://accounts.spotify.com/authorize'
-    const SPOTIFY_ENDPOINT_API = 'https://accounts.spotify.com'
+    // const SPOTIFY_ENDPOINT_API = 'https://accounts.spotify.com'
 
     const REDIRECT_URL_AFTER_LOGIN = 'http://localhost:3000/'
     const SPACE_DELIMITER = "%20";
     const SCOPE = ["streaming", "user-top-read", "user-modify-playback-state", "app-remote-control", "user-library-modify", "user-library-read", "user-read-recently-played", "user-read-playback-state", "user-read-email", "user-read-currently-playing", "playlist-modify-public", "user-read-private", "user-read-recently-played", "user-follow-read"]
     const SCOPES_URL_PARAM = SCOPE.join(SPACE_DELIMITER)
     //use Redux from store 
-    const displayData = useSelector((state) => state.profile.displayInformation)
+    // const displayData = useSelector((state) => state.profile.displayInformation)
 
     useEffect(() => {
-
         fetchSpotifyData()
-
 
     }, [])
 
     async function fetchSpotifyData() {
         if (window.location.hash) {
-            console.log('hash is ', window.location.hash);
+            // console.log('hash is ', window.location.hash);
             const { access_token, expires_in, token_type } = await ReturnParams(window.location.hash)
             // toast('Authenticating in ..')
-            const accessresult = { accesstoken: access_token, expiresin: expires_in, tokentype: token_type }
+            // const accessresult = { accesstoken: access_token, expiresin: expires_in, tokentype: token_type }
             // console.log('object token is ', accessresult);
             localStorage.setItem('user_token', access_token)
 

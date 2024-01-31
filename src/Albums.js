@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom'
 import Table from 'react-bootstrap/Table'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
-import getCurrentUser from './api/getCurrentUser'
 import { updatedisplayInfo } from './Redux/profile'
 
 
@@ -12,11 +11,11 @@ const Albums = () => {
     const dispatch = useDispatch();
 
     const AlbumID = useParams()
-    var songData = useSelector((state) => state.songInfo.songInformation)
+    // var songData = useSelector((state) => state.songInfo.songInformation)
     var deviceData = useSelector((state) => state.deviceInfo.deviceInformation)
 
 
-    const [playlists, setPlayLists] = useState({})
+    // const [playlists, setPlayLists] = useState({})
     const [albumData, setAlbumData] = useState([])
 
 
@@ -29,7 +28,7 @@ const Albums = () => {
     useEffect(() => {
         const HeaderchangeBG = document.getElementsByClassName('searchHeader');
         HeaderchangeBG[0].style.backgroundImage = `transparent`
-        console.log(HeaderchangeBG);
+        // console.log(HeaderchangeBG);
         const changeBG = document.getElementsByClassName('SearchMain');
         changeBG[0].style.backgroundImage = `linear-gradient(to top,#181818, #2f4441)`
         // console.log(changeBG[0].style.backgroundImage);
@@ -72,10 +71,10 @@ const Albums = () => {
                     Authorization: `Bearer ${USER_TOKEN}`,
                 },
             }).then(async (res) => {
-                console.log(res.data);
+                // console.log(res.data);
                 await setAlbumData(res.data)
                 await getArtistById(USER_TOKEN, res.data?.artists[0].id)
-                console.log(res.data);
+                // console.log(res.data);
 
             }).catch(err => console.log('err in getAlbumById', err))
         // return GetUser
@@ -99,11 +98,11 @@ const Albums = () => {
     }
 
     const playSongOnClick = async (TOKEN, CONTEXT_URI) => {
-        console.log('hello');
-        console.log(CONTEXT_URI);
+        // console.log('hello');
+        // console.log(CONTEXT_URI);
         const DEVICE_ID = deviceData.device_id
-        console.log('from play song on click', DEVICE_ID);
-        console.log('from play song on click token', TOKEN);
+        // console.log('from play song on click', DEVICE_ID);
+        // console.log('from play song on click token', TOKEN);
 
 
         const data = {
@@ -150,7 +149,7 @@ const Albums = () => {
                             <span className='fontStyle' style={{ textTransform: 'capitalize', fontSize: '14px' }}>{albumData.type}</span>
                             <span className='fontStyle' style={{ fontSize: '43px', fontWeight: '600', marginTop: '0', marginBottom: 0 }} >{albumData.name}</span>
                             {/* <span className='fontStyle' style={{ fontWeight: '400', color: '#a7a7a7', fontSize: '14px' }} >{playlists.Description}</span> */}
-                            <ul style={{ marginLeft: '-3%', display: 'flex', alignItems: 'center', fontSize: '14px', gap: '15px' }} key={playlists.PlaylistID} >
+                            <ul style={{ marginLeft: '-3%', display: 'flex', alignItems: 'center', fontSize: '14px', gap: '15px' }} >
                                 <li style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
                                     <img height={20} style={{ borderRadius: '50%' }} src={artist.image} alt="" />
                                 </li>
@@ -184,7 +183,7 @@ const Albums = () => {
                         <tbody>
                             {albumData.tracks.items.map((item, index) => {
                                 return (
-                                    <tr className='fontStyle likedSongTable' style={{ marginTop: '10px', borderRadius: '5px' }} >
+                                    <tr key={index} className='fontStyle likedSongTable' style={{ marginTop: '10px', borderRadius: '5px' }} >
                                         <td className='table_data'  >{index + 1}</td>
 
                                         <td style={{ display: 'flex', gap: '10px' }} className='table_data'  >
@@ -195,7 +194,6 @@ const Albums = () => {
                                                 </span>
                                             </div>
                                         </td>
-
                                         <td className='table_data' style={{ fontSize: '0.9rem' }} >
                                             {Math.floor(item.duration_ms / 60000) + ":" + (((item.duration_ms % 60000) / 1000).toFixed(0) < 10 ? '0' : '') + ((item.duration_ms % 60000) / 1000).toFixed(0)}
                                         </td>
